@@ -1,15 +1,25 @@
 from fastapi import FastAPI, HTTPException
 import requests
 from pydantic import BaseModel
-
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class Query(BaseModel):
     prompt: str
-    model: str = "llama3.2"
-    stream: bool = False
 
 
 @app.post("/generate")
@@ -17,7 +27,7 @@ async def generate_text(query: Query):
     try:
         response = requests.post(
             "http://localhost:11434/api/generate",
-            json={"model": query.model, "prompt": query.prompt, "stream": query.stream},
+            json={"model": "llama3.2", "prompt": query.prompt, "stream": False},
             headers={"Content-Type": "application/json"},
         )
         print(response)
