@@ -1,0 +1,6 @@
+.env
+.LlamaApiPython
+env/
+venv/
+LlamaApiPython/
+__pycache__/
